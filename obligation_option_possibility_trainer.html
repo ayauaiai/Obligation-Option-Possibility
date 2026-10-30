@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Obligation, Option & Possibility — Vocabulary Trainer</title>
+<style>
+:root{--pink:#df6682;--pink-dark:#c94e6d;--ink:#38232b;--muted:#826b73;--line:#f0dce2;--pale:#fff7f9;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#fff7f8;color:var(--ink);font-family:Arial,sans-serif}
+header{text-align:center;padding:34px 16px 26px;background:#fff;border-bottom:1px solid var(--line)}header small{letter-spacing:2px;color:var(--pink);font-weight:bold}h1{font-size:clamp(25px,5vw,36px);margin:10px 0 6px}header p{color:#88747b;margin:0}
+main{max-width:850px;margin:25px auto;padding:0 16px}.tabs,.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0 18px}
+button{font:inherit;cursor:pointer}.tabs button,.btn{border:1px solid var(--line);background:white;color:#52323d;border-radius:24px;padding:11px 17px;font-weight:bold;transition:.15s}.tabs button:hover,.btn:hover{border-color:var(--pink);transform:translateY(-1px)}.tabs .active,.primary{background:var(--pink);color:white;border-color:var(--pink)}
+.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 8px 24px #6934470b}.hidden{display:none!important}.label{color:var(--pink);font-size:12px;font-weight:bold;letter-spacing:1px}
+.card{min-height:270px;background:var(--pale);border:1px solid #f1d3dc;border-radius:16px;padding:25px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer}.word{font-size:clamp(32px,7vw,48px);font-weight:800;color:var(--pink);margin:18px 0}.definition{font-size:20px;font-weight:bold;line-height:1.4}.translation{color:var(--muted);margin-top:13px}.progress{height:6px;background:#f5e6ea;border-radius:8px;margin:14px 0 18px;overflow:hidden}.progress span{height:100%;display:block;background:var(--pink);border-radius:8px;width:0}
+input{width:100%;padding:14px;border:1px solid #e8cbd4;border-radius:12px;font-size:16px;margin:10px 0 16px;outline:none}input:focus{border-color:var(--pink)}.entry{padding:15px 4px;border-bottom:1px solid #f0e0e5;display:grid;grid-template-columns:minmax(125px,1fr) 2fr 1.2fr;gap:15px;align-items:center}.entry b{color:var(--pink);font-size:16px}.entry .meaning{line-height:1.4}.entry small{display:block;color:var(--muted);font-size:14px;line-height:1.4}.count{color:var(--muted);font-size:13px;margin-bottom:6px}
+.quiz-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:14px}.question{font-size:22px;font-weight:bold;line-height:1.45;margin:25px 0 20px}.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.answer{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fffafb;text-align:left;color:var(--ink);font-weight:600}.answer:hover:not(:disabled){border-color:var(--pink);background:#fff5f7}.answer:disabled{cursor:default}.answer.correct{background:#e9f7ed;border-color:#70b989}.answer.incorrect{background:#fff0f0;border-color:#dc9299}.feedback{margin-top:15px;font-weight:bold;line-height:1.5;min-height:24px}.quiz-controls{display:flex;justify-content:flex-end;margin-top:18px}.result{text-align:center;padding:24px 5px}.result strong{display:block;font-size:48px;color:var(--pink);margin:15px 0}.result p{color:var(--muted);line-height:1.5}
+footer{text-align:center;color:#9a858c;padding:24px;font-size:13px}@media(max-width:620px){.entry{grid-template-columns:1fr;gap:5px}.answers{grid-template-columns:1fr}.panel{padding:18px}.question{font-size:19px}}
+</style>
+</head>
+<body>
+<header><small>ENGLISH VOCABULARY</small><h1>Obligation, Option &amp; Possibility</h1><p>Learn the words · Check your knowledge · Make progress</p></header>
+<main>
+<nav class="tabs" aria-label="Study modes">
+<button class="active" data-tab="cards">Flashcards</button><button data-tab="list">Vocabulary</button><button data-tab="quiz">Self-test</button>
+</nav>
+<section class="panel" id="cards">
+<div class="label" id="cardNo"></div><div class="progress"><span id="cardBar"></span></div>
+<div class="card" id="flash" role="button" tabindex="0" aria-label="Reveal flashcard answer"><div class="label">TAP TO REVEAL</div><div class="word" id="term"></div><div class="definition hidden" id="def"></div><div class="translation hidden" id="trans"></div></div>
+<div class="actions"><button class="btn" id="prev">← Back</button><button class="btn primary" id="reveal">Show answer</button><button class="btn" id="next">Next →</button><button class="btn" id="mix">Shuffle</button></div>
+</section>
+<section class="panel hidden" id="list">
+<div class="label">ALL WORDS AND MEANINGS</div><input id="search" placeholder="Search English words, definitions or Kazakh translations..."><div class="count" id="wordCount"></div><div id="words"></div>
+</section>
+<section class="panel hidden" id="quiz">
+<div id="quizStart" class="result"><div class="label">SELF-TEST</div><h2>Check what you remember</h2><p>10 questions · Multiple choice · One point for each correct answer</p><button class="btn primary" id="startQuiz">Start test</button></div>
+<div id="quizPlay" class="hidden"><div class="quiz-top"><span id="questionNo">QUESTION 1 OF 10</span><span id="scoreNow">Score: 0</span></div><div class="progress"><span id="quizBar"></span></div><div class="label">CHOOSE THE CORRECT WORD</div><div class="question" id="questionText"></div><div class="answers" id="answerOptions"></div><div class="feedback" id="quizFeedback" aria-live="polite"></div><div class="quiz-controls"><button class="btn primary hidden" id="nextQuestion">Next question →</button></div></div>
+<div id="quizResult" class="result hidden"><div class="label">TEST COMPLETE</div><h2>Your result</h2><strong id="finalScore">0/10</strong><p id="resultText"></p><button class="btn primary" id="retryQuiz">Try again</button></div>
+</section>
+</main><footer>Small steps make progress 🌷</footer>
+<script>
+const data=[
+["required","necessary; must be done","міндетті"],
+["obligatory","required by a rule, law, or duty","міндетті"],
+["mandatory","required; not optional","міндетті"],
+["compulsory","required by a rule, law, or authority","міндетті"],
+["liable","legally responsible, especially for damage or costs","жауапты; заң жүзінде жауапты"],
+["exempt from","officially excused from a duty, payment, or requirement","бір нәрседен босатылған"],
+["to require","to say that something is necessary or must be done","талап ету"],
+["to oblige","to make someone do something because of a rule or duty","міндеттеу"],
+["to compel","to force someone to do something","мәжбүрлеу"],
+["to force","to make someone do something against their wishes","мәжбүрлеу; күштеу"],
+["optional","not necessary; you can choose whether to do it","міндетті емес; таңдау бойынша"],
+["voluntary","done by choice, not because you are required to do it","ерікті; өз қалауы бойынша"],
+["choice","the act of choosing between two or more possibilities","таңдау"],
+["option","one of the choices that you can make","нұсқа; таңдау"],
+["alternative","another possibility or choice","балама; басқа нұсқа"],
+["available","able to be used, obtained, or accessed","қолжетімді; бар"],
+["eligible","having the right qualifications to do or receive something","талаптарға сай; құқылы"],
+["qualified","having the skills or conditions needed for something","білікті; талаптарға сай"],
+["possible","able to happen or be done","мүмкін"],
+["probable","likely to happen or be true","ықтимал"],
+["likely","having a good chance of happening or being true","болуы ықтимал"],
+["opportunity","a situation that makes it possible to do something useful","мүмкіндік"],
+["to approve","to officially accept or agree to something","мақұлдау; бекіту"],
+["to permit","to allow something to happen","рұқсат ету"],
+["to allow","to let someone do something or let something happen","рұқсат ету; мүмкіндік беру"],
+["to authorize","to give official permission for something","ресми рұқсат беру"],
+["permission","the act of allowing someone to do something","рұқсат"],
+["authorization","official permission to do or use something","рұқсат; өкілеттік"],
+["to prohibit","to officially forbid something","тыйым салу"],
+["to forbid","to order someone not to do something","тыйым салу; рұқсат етпеу"],
+["to ban","to officially say that something is not allowed","тыйым салу"],
+["forbidden","not allowed by a rule, law, or authority","тыйым салынған"],
+["prohibited","officially not allowed","тыйым салынған"],
+["illegal","against the law","заңсыз"],
+["essential","extremely important or necessary","аса маңызды; қажетті"],
+["necessary","needed for a particular purpose","қажетті"],
+["important","having great value or significance","маңызды"],
+["vital","absolutely necessary or extremely important","аса маңызды; өмірлік қажетті"],
+["duty","something you must do because it is your responsibility","міндет"],
+["responsibility","the state of being responsible for something or someone","жауапкершілік"],
+["obligation","something you must do because of a rule, law, or promise","міндет; міндеттеме"]
+];
+const $=id=>document.getElementById(id);
+// Tab switching: only toggle panels that actually exist.
+document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{
+ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===button));
+ ['cards','list','quiz'].forEach(id=>$(id).classList.toggle('hidden',id!==button.dataset.tab));
+}));
+let order=data.map((_,index)=>index),cardIndex=0,shown=false;
+function renderCard(){const item=data[order[cardIndex]];shown=false;$('term').textContent=item[0];$('def').textContent=item[1];$('trans').textContent=item[2];$('def').classList.add('hidden');$('trans').classList.add('hidden');$('reveal').textContent='Show answer';$('cardNo').textContent=`CARD ${cardIndex+1} OF ${order.length}`;$('cardBar').style.width=((cardIndex+1)/order.length*100)+'%';}
+function reveal(){shown=!shown;$('def').classList.toggle('hidden',!shown);$('trans').classList.toggle('hidden',!shown);$('reveal').textContent=shown?'Hide answer':'Show answer';}
+$('flash').addEventListener('click',reveal);$('flash').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();reveal();}});$('reveal').addEventListener('click',e=>{e.stopPropagation();reveal();});
+$('prev').onclick=()=>{cardIndex=(cardIndex-1+order.length)%order.length;renderCard()};$('next').onclick=()=>{cardIndex=(cardIndex+1)%order.length;renderCard()};$('mix').onclick=()=>{order.sort(()=>Math.random()-.5);cardIndex=0;renderCard()};
+function renderList(search=''){$('words').innerHTML='';const filtered=data.filter(item=>item.join(' ').toLowerCase().includes(search.toLowerCase()));$('wordCount').textContent=`Showing ${filtered.length} of ${data.length} words`;filtered.forEach(item=>{const row=document.createElement('div');row.className='entry';const term=document.createElement('b');term.textContent=item[0];const definition=document.createElement('div');definition.className='meaning';definition.textContent=item[1];const translation=document.createElement('small');translation.textContent=item[2];row.append(term,definition,translation);$('words').appendChild(row);});}
+$('search').addEventListener('input',e=>renderList(e.target.value));
+let quizItems=[],quizIndex=0,quizScore=0,answered=false;
+function shuffle(array){return [...array].sort(()=>Math.random()-.5)}
+function startQuiz(){quizItems=shuffle(data).slice(0,10);quizIndex=0;quizScore=0;$('quizStart').classList.add('hidden');$('quizResult').classList.add('hidden');$('quizPlay').classList.remove('hidden');renderQuestion();}
+function renderQuestion(){answered=false;const item=quizItems[quizIndex];$('questionNo').textContent=`QUESTION ${quizIndex+1} OF ${quizItems.length}`;$('scoreNow').textContent=`Score: ${quizScore}`;$('quizBar').style.width=(quizIndex/quizItems.length*100)+'%';$('questionText').textContent=item[1];$('quizFeedback').textContent='';$('nextQuestion').classList.add('hidden');const distractors=shuffle(data.filter(x=>x[0]!==item[0])).slice(0,3);const options=shuffle([item,...distractors]);$('answerOptions').innerHTML='';options.forEach(option=>{const button=document.createElement('button');button.className='answer';button.textContent=option[0];button.addEventListener('click',()=>chooseAnswer(button,option,item));$('answerOptions').appendChild(button);});}
+function chooseAnswer(button,chosen,correct){if(answered)return;answered=true;const buttons=[...$('answerOptions').querySelectorAll('button')];buttons.forEach(b=>{b.disabled=true;if(b.textContent===correct[0])b.classList.add('correct');});if(chosen[0]===correct[0]){quizScore++;$('quizFeedback').textContent='✓ Correct! '+correct[2];}else{$('quizFeedback').textContent=`Not quite. Correct answer: ${correct[0]} — ${correct[2]}.`;button.classList.add('incorrect');}$('scoreNow').textContent=`Score: ${quizScore}`;$('quizBar').style.width=((quizIndex+1)/quizItems.length*100)+'%';$('nextQuestion').textContent=quizIndex===quizItems.length-1?'See result':'Next question →';$('nextQuestion').classList.remove('hidden');}
+function nextQuestion(){if(!answered)return;if(quizIndex<quizItems.length-1){quizIndex++;renderQuestion();}else{showResult();}}
+function showResult(){$('quizPlay').classList.add('hidden');$('quizResult').classList.remove('hidden');$('finalScore').textContent=`${quizScore}/10`;$('resultText').textContent=quizScore===10?'Excellent! You know these words very well.':quizScore>=7?'Great work! Review the words you missed and try again.':quizScore>=5?'Good start. Study the vocabulary list and repeat the test.':'Keep practising. Use Flashcards and Vocabulary, then take the test again.';}
+$('startQuiz').onclick=startQuiz;$('retryQuiz').onclick=startQuiz;$('nextQuestion').onclick=nextQuestion;
+renderCard();renderList();
+</script>
+</body></html>
